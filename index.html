@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Retro Canni | Game-Ready Dispensary</title>
+  <meta name="description" content="Retro Canni is a retro gaming-inspired dispensary experience for 21+ customers." />
+  <style>
+    :root {
+      --shell: #d7d2bf;
+      --shell-dark: #9d967f;
+      --screen: #9bbc0f;
+      --screen-dark: #306230;
+      --screen-mid: #8bac0f;
+      --ink: #0f380f;
+      --black: #121212;
+      --red: #b83c4b;
+      --blue: #334a8f;
+      --yellow: #f6d86b;
+      --white: #f8f5e8;
+      --shadow: rgba(0, 0, 0, .28);
+      --glow: rgba(155, 188, 15, .35);
+      --radius: 28px;
+      --pixel: "Courier New", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--white);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(155, 188, 15, .18), transparent 28%),
+        radial-gradient(circle at 80% 0%, rgba(184, 60, 75, .22), transparent 30%),
+        linear-gradient(135deg, #10100f 0%, #151515 45%, #050505 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .16;
+      background-image:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    .top-alert {
+      width: min(1120px, calc(100% - 28px));
+      margin: 18px auto 0;
+      padding: 10px 14px;
+      border: 1px solid rgba(246, 216, 107, .35);
+      border-radius: 999px;
+      color: #fff4bf;
+      background: rgba(246, 216, 107, .08);
+      font-size: .82rem;
+      text-align: center;
+    }
+
+    .gameboy {
+      width: min(1120px, calc(100% - 28px));
+      margin: 18px auto 42px;
+      padding: clamp(16px, 3vw, 34px);
+      border-radius: 36px 36px 64px 36px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.45), transparent 18%),
+        linear-gradient(160deg, var(--shell), #bbb49f);
+      box-shadow:
+        0 34px 70px var(--shadow),
+        inset 0 2px 2px rgba(255,255,255,.8),
+        inset 0 -10px 18px rgba(75,72,60,.25);
+      color: var(--black);
+      position: relative;
+      isolation: isolate;
+    }
+
+    .brand-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 16px;
+      font-family: var(--pixel);
+      letter-spacing: -1px;
+      color: #514d42;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: clamp(.86rem, 2vw, 1.05rem);
+      font-weight: 900;
+    }
+
+    .power-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #f04f5f;
+      box-shadow: 0 0 0 4px rgba(240,79,95,.15), 0 0 18px rgba(240,79,95,.8);
+      animation: pulse 1.8s infinite;
+    }
+
+    .battery {
+      font-size: .78rem;
+      opacity: .8;
+      white-space: nowrap;
+    }
+
+    .screen-frame {
+      position: relative;
+      border-radius: 28px 28px 48px 28px;
+      background: #303030;
+      padding: clamp(16px, 2.5vw, 28px);
+      box-shadow:
+        inset 0 0 0 3px rgba(255,255,255,.08),
+        inset 0 -18px 30px rgba(0,0,0,.25);
+    }
+
+    .screen-frame::before,
+    .screen-frame::after {
+      content: "";
+      position: absolute;
+      top: 24px;
+      height: 2px;
+      width: 22%;
+      background: #7a2c56;
+      opacity: .7;
+    }
+
+    .screen-frame::before { left: 24px; }
+    .screen-frame::after { right: 24px; }
+
+    .screen-label {
+      font-family: var(--pixel);
+      color: #d4d2ca;
+      font-size: .68rem;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .screen {
+      border-radius: 14px;
+      min-height: 620px;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(255,255,255,.06), transparent 14%),
+        repeating-linear-gradient(0deg, rgba(15, 56, 15, .08) 0px, rgba(15, 56, 15, .08) 2px, transparent 2px, transparent 5px),
+        var(--screen);
+      box-shadow:
+        inset 0 0 26px rgba(15,56,15,.55),
+        0 0 45px var(--glow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .screen::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 28% 18%, rgba(255,255,255,.28), transparent 24%);
+      mix-blend-mode: soft-light;
+    }
+
+    .screen-content {
+      position: relative;
+      z-index: 1;
+      padding: clamp(18px, 3vw, 32px);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      font-family: var(--pixel);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding-bottom: 18px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .cart {
+      width: 38px;
+      height: 30px;
+      border: 3px solid var(--ink);
+      border-radius: 5px 5px 10px 10px;
+      position: relative;
+      background: rgba(48, 98, 48, .16);
+      box-shadow: 4px 4px 0 rgba(15, 56, 15, .23);
+    }
+
+    .cart::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 8px;
+      width: 17px;
+      height: 10px;
+      border: 3px solid var(--ink);
+      border-bottom: none;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a,
+    .menu-btn {
+      border: 2px solid var(--ink);
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: rgba(48,98,48,.12);
+      color: var(--ink);
+      box-shadow: 3px 3px 0 rgba(15,56,15,.22);
+      font-size: .72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .nav-links a:hover,
+    .menu-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 5px 5px 0 rgba(15,56,15,.22);
+      background: rgba(48,98,48,.22);
+    }
+
+    .menu-btn {
+      display: none;
+      cursor: pointer;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      align-items: center;
+      gap: clamp(20px, 4vw, 48px);
+      padding: 18px 0 30px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      font-family: var(--pixel);
+      font-size: .72rem;
+      font-weight: 900;
+      background: rgba(48,98,48,.13);
+      box-shadow: 3px 3px 0 rgba(15,56,15,.23);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--pixel);
+      font-size: clamp(2.25rem, 8vw, 5.5rem);
+      line-height: .88;
+      letter-spacing: -5px;
+      margin: 0 0 16px;
+      text-transform: uppercase;
+      text-shadow: 4px 4px 0 rgba(48,98,48,.22);
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      line-height: 1.55;
+      max-width: 680px;
+      margin: 0 0 22px;
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 12px 16px;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      font-family: var(--pixel);
+      font-size: .85rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: rgba(48,98,48,.18);
+      box-shadow: 5px 5px 0 rgba(15,56,15,.28);
+      cursor: pointer;
+      transition: .18s ease;
+    }
+
+    .btn:hover {
+      transform: translate(-3px, -3px);
+      box-shadow: 8px 8px 0 rgba(15,56,15,.28);
+    }
+
+    .btn.primary {
+      background: var(--ink);
+      color: var(--screen);
+    }
+
+    .hero-card {
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(48,98,48,.13);
+      box-shadow: 8px 8px 0 rgba(15,56,15,.23);
+      transform: rotate(1.5deg);
+    }
+
+    .mini-game {
+      position: relative;
+      border: 3px solid var(--ink);
+      background:
+        linear-gradient(90deg, rgba(15,56,15,.12) 1px, transparent 1px),
+        linear-gradient(rgba(15,56,15,.12) 1px, transparent 1px),
+        rgba(139,172,15,.45);
+      background-size: 20px 20px;
+      border-radius: 10px;
+      min-height: 260px;
+      overflow: hidden;
+    }
+
+    .sprite {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      left: 50%;
+      top: 42%;
+      transform: translate(-50%, -50%);
+      image-rendering: pixelated;
+    }
+
+    .sprite .leaf {
+      position: absolute;
+      width: 26px;
+      height: 48px;
+      border: 3px solid var(--ink);
+      background: rgba(48,98,48,.35);
+      border-radius: 90% 0 90% 0;
+      transform-origin: bottom center;
+    }
+
+    .sprite .leaf:nth-child(1) { left: 27px; top: 8px; transform: rotate(0deg); }
+    .sprite .leaf:nth-child(2) { left: 12px; top: 18px; transform: rotate(-45deg); }
+    .sprite .leaf:nth-child(3) { left: 42px; top: 18px; transform: rotate(45deg); }
+    .sprite .leaf:nth-child(4) { left: 8px; top: 36px; transform: rotate(-75deg); }
+    .sprite .leaf:nth-child(5) { left: 46px; top: 36px; transform: rotate(75deg); }
+    .sprite .stem {
+      position: absolute;
+      left: 37px;
+      top: 48px;
+      width: 8px;
+      height: 30px;
+      background: var(--ink);
+    }
+
+    .pixel-cloud {
+      position: absolute;
+      width: 58px;
+      height: 22px;
+      border: 3px solid var(--ink);
+      background: rgba(48,98,48,.2);
+      box-shadow: 10px 10px 0 rgba(15,56,15,.18);
+      animation: drift 8s linear infinite;
+    }
+
+    .pixel-cloud.one { top: 34px; left: -80px; }
+    .pixel-cloud.two { top: 172px; left: -160px; animation-delay: 2.2s; width: 86px; }
+
+    .score-box {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      font-family: var(--pixel);
+      font-size: .78rem;
+      font-weight: 900;
+    }
+
+    .status-box {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      font-family: var(--pixel);
+      font-size: .72rem;
+      font-weight: 900;
+      border: 2px solid var(--ink);
+      padding: 8px;
+      background: rgba(155,188,15,.7);
+    }
+
+    section {
+      padding: clamp(30px, 6vw, 62px) 0;
+      border-top: 3px dashed rgba(15,56,15,.35);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-family: var(--pixel);
+      font-size: clamp(1.55rem, 4vw, 3rem);
+      line-height: .98;
+      margin: 0;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+    }
+
+    .section-title p {
+      max-width: 420px;
+      margin: 0;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(48,98,48,.12);
+      box-shadow: 6px 6px 0 rgba(15,56,15,.22);
+      padding: 16px;
+      transition: .2s ease;
+    }
+
+    .card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 8px 8px 0 rgba(15,56,15,.22);
+    }
+
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      font-family: var(--pixel);
+      font-weight: 900;
+      font-size: 1.4rem;
+      background: rgba(139,172,15,.6);
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-family: var(--pixel);
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      margin: 0 0 12px;
+      line-height: 1.5;
+      font-weight: 700;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      border: 2px solid var(--ink);
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-family: var(--pixel);
+      font-size: .62rem;
+      font-weight: 900;
+      background: rgba(48,98,48,.12);
+    }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .console-panel {
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      background: rgba(48,98,48,.12);
+      padding: 18px;
+      box-shadow: 8px 8px 0 rgba(15,56,15,.22);
+    }
+
+    .progress {
+      height: 22px;
+      border: 3px solid var(--ink);
+      border-radius: 99px;
+      overflow: hidden;
+      background: rgba(48,98,48,.16);
+      margin: 12px 0 18px;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 72%;
+      background: var(--ink);
+      animation: loadbar 2.4s ease-in-out infinite alternate;
+    }
+
+    .perk-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .perk-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .perk-list li::before {
+      content: "▶";
+      font-family: var(--pixel);
+      font-size: .8rem;
+      margin-top: 2px;
+    }
+
+    .event-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .event {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 12px;
+      border: 3px solid var(--ink);
+      border-radius: 14px;
+      background: rgba(139,172,15,.35);
+      padding: 12px;
+    }
+
+    .event-date {
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      font-family: var(--pixel);
+      font-weight: 900;
+      background: rgba(48,98,48,.16);
+      text-align: center;
+      min-height: 74px;
+    }
+
+    .event h3 {
+      margin-top: 4px;
+    }
+
+    .event p {
+      margin: 0;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .shop-window {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .product {
+      min-height: 170px;
+      border: 3px solid var(--ink);
+      border-radius: 12px;
+      background:
+        linear-gradient(135deg, rgba(48,98,48,.18), rgba(139,172,15,.35));
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 5px 5px 0 rgba(15,56,15,.2);
+    }
+
+    .product strong {
+      display: block;
+      font-family: var(--pixel);
+      font-size: .88rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .product span {
+      font-weight: 800;
+      line-height: 1.35;
+      font-size: .9rem;
+    }
+
+    .rating {
+      font-family: var(--pixel);
+      font-weight: 900;
+      margin-top: 10px;
+    }
+
+    .visit {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      font-weight: 900;
+      font-family: var(--pixel);
+      font-size: .72rem;
+      text-transform: uppercase;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 3px solid var(--ink);
+      border-radius: 10px;
+      padding: 12px;
+      color: var(--ink);
+      background: rgba(155,188,15,.62);
+      outline: none;
+      font-weight: 800;
+      box-shadow: 4px 4px 0 rgba(15,56,15,.18);
+    }
+
+    .field textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      padding: 24px clamp(8px, 2vw, 22px) 0;
+      align-items: center;
+    }
+
+    .dpad {
+      width: 140px;
+      height: 140px;
+      position: relative;
+      margin: auto;
+      filter: drop-shadow(5px 5px 0 rgba(0,0,0,.18));
+    }
+
+    .dpad::before,
+    .dpad::after {
+      content: "";
+      position: absolute;
+      background: #333;
+      border-radius: 8px;
+      box-shadow: inset 0 3px 4px rgba(255,255,255,.14), inset 0 -6px 7px rgba(0,0,0,.28);
+    }
+
+    .dpad::before {
+      width: 46px;
+      height: 132px;
+      left: 47px;
+      top: 4px;
+    }
+
+    .dpad::after {
+      width: 132px;
+      height: 46px;
+      left: 4px;
+      top: 47px;
+    }
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 22px;
+      transform: rotate(-18deg);
+    }
+
+    .round-btn {
+      width: 62px;
+      height: 62px;
+      border-radius: 999px;
+      background: #8f274e;
+      border: none;
+      box-shadow:
+        6px 8px 0 rgba(0,0,0,.2),
+        inset 0 4px 6px rgba(255,255,255,.2),
+        inset 0 -7px 9px rgba(0,0,0,.25);
+      color: rgba(255,255,255,.7);
+      font-family: var(--pixel);
+      font-weight: 900;
+      display: grid;
+      place-items: center;
+      transform: rotate(18deg);
+    }
+
+    .speaker {
+      position: absolute;
+      right: clamp(22px, 5vw, 62px);
+      bottom: 24px;
+      display: grid;
+      gap: 7px;
+      transform: rotate(-15deg);
+      opacity: .65;
+    }
+
+    .speaker span {
+      width: 74px;
+      height: 7px;
+      border-radius: 999px;
+      background: #77715e;
+      display: block;
+    }
+
+    footer {
+      text-align: center;
+      font-family: var(--pixel);
+      font-size: .72rem;
+      font-weight: 900;
+      color: #4d493c;
+      padding: 18px 0 6px;
+      line-height: 1.5;
+    }
+
+    .age-gate {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(155,188,15,.18), transparent 32%),
+        rgba(8,8,8,.92);
+      z-index: 99;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .age-card {
+      width: min(540px, 100%);
+      border: 4px solid var(--ink);
+      border-radius: 22px;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(0deg, rgba(15,56,15,.08) 0px, rgba(15,56,15,.08) 2px, transparent 2px, transparent 5px),
+        var(--screen);
+      box-shadow: 12px 12px 0 rgba(155,188,15,.2);
+      padding: 26px;
+      text-align: center;
+    }
+
+    .age-card h2 {
+      margin-bottom: 12px;
+    }
+
+    .age-card p {
+      margin: 0 0 18px;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .age-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translateX(-50%);
+      background: var(--ink);
+      color: var(--screen);
+      border: 3px solid var(--screen);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: var(--pixel);
+      font-weight: 900;
+      z-index: 100;
+      box-shadow: 8px 8px 0 rgba(0,0,0,.3);
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+      text-align: center;
+      max-width: calc(100% - 24px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-8px);
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: .55; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes drift {
+      from { transform: translateX(0); }
+      to { transform: translateX(520px); }
+    }
+
+    @keyframes loadbar {
+      from { width: 42%; }
+      to { width: 88%; }
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .level-grid,
+      .visit {
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .shop-window {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-card {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .gameboy {
+        width: min(480px, calc(100% - 18px));
+        margin-top: 10px;
+        padding: 14px;
+        border-radius: 28px 28px 48px 28px;
+      }
+
+      .screen-frame {
+        padding: 12px;
+        border-radius: 22px 22px 38px 22px;
+      }
+
+      .screen {
+        min-height: 640px;
+      }
+
+      .screen-content {
+        padding: 16px;
+      }
+
+      .nav {
+        align-items: flex-start;
+      }
+
+      .menu-btn {
+        display: inline-flex;
+      }
+
+      .nav-links {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 48px;
+        display: none;
+        flex-direction: column;
+        background: rgba(155,188,15,.95);
+        border: 3px solid var(--ink);
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 7px 7px 0 rgba(15,56,15,.22);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      h1 {
+        letter-spacing: -3px;
+      }
+
+      .cards,
+      .shop-window {
+        grid-template-columns: 1fr;
+      }
+
+      .controls {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .speaker {
+        display: none;
+      }
+
+      .brand-strip {
+        align-items: flex-start;
+      }
+
+      .battery {
+        display: none;
+      }
+
+      .top-alert {
+        border-radius: 18px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .hero-actions,
+      .age-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .event {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-game {
+        min-height: 220px;
+      }
+
+      .screen-content {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
+    <div class="age-card">
+      <div class="eyebrow">INSERT ID TO START</div>
+      <h2 id="ageTitle">Are you 21+?</h2>
+      <p>Retro Canni is a cannabis-themed website experience for adults only. Please follow all local laws and consume responsibly.</p>
+      <div class="age-actions">
+        <button class="btn primary" id="enterSite">Yes, Start Game</button>
+        <button class="btn" id="exitSite">No, Power Down</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Game saved.</div>
+
+  <div class="top-alert">21+ only. This demo does not process cannabis sales. Update products, pickup rules, and legal language for your licensed market.</div>
+
+  <main class="gameboy">
+    <div class="brand-strip">
+      <div class="brand-left">
+        <span class="power-dot"></span>
+        <span>RETRO CANNI HANDHELD DISPENSARY SYSTEM</span>
+      </div>
+      <div class="battery">BATTERY █████░ 90%</div>
+    </div>
+
+    <div class="screen-frame">
+      <div class="screen-label">
+        <span>DOT MATRIX WITH STEREO SOUND</span>
+        <span>RC-420</span>
+      </div>
+
+      <div class="screen">
+        <div class="screen-content">
+          <nav class="nav" aria-label="Primary navigation">
+            <a href="#home" class="logo" aria-label="Retro Canni Home">
+              <span class="cart" aria-hidden="true"></span>
+              <span>Retro Canni</span>
+            </a>
+            <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
+            <div class="nav-links" id="navLinks">
+              <a href="#strains">Strains</a>
+              <a href="#lounge">Lounge</a>
+              <a href="#events">Events</a>
+              <a href="#visit">Visit</a>
+            </div>
+          </nav>
+
+          <header class="hero" id="home">
+            <div>
+              <div class="eyebrow">PLAYER 1 READY • 21+</div>
+              <h1>Press Start & Chill</h1>
+              <p>Retro Canni is a licensed dispensary concept built for gamers, creators, streamers, collectors, and late-night side-questers who love nostalgic pixels and modern cannabis culture.</p>
+              <div class="hero-actions">
+                <a class="btn primary" href="#strains">View Menu</a>
+                <a class="btn" href="#events">Join Game Night</a>
+              </div>
+            </div>
+
+            <div class="hero-card" aria-label="Animated pixel cannabis game screen">
+              <div class="mini-game">
+                <div class="score-box">SCORE 0420<br>LEVEL: RELAX</div>
+                <div class="pixel-cloud one"></div>
+                <div class="pixel-cloud two"></div>
+                <div class="sprite" aria-hidden="true">
+                  <span class="leaf"></span>
+                  <span class="leaf"></span>
+                  <span class="leaf"></span>
+                  <span class="leaf"></span>
+                  <span class="leaf"></span>
+                  <span class="stem"></span>
+                </div>
+                <div class="status-box">A: MENU<br>B: EVENTS</div>
+              </div>
+            </div>
+          </header>
+
+          <section id="strains">
+            <div class="section-title">
+              <h2>Choose Your Power-Up</h2>
+              <p>Organize your cannabis menu like a cartridge library. Swap the sample names with your real licensed inventory.</p>
+            </div>
+
+            <div class="cards">
+              <article class="card">
+                <div class="card-icon">S</div>
+                <h3>Starter Quest</h3>
+                <p>Balanced options for casual players who want a smooth, easygoing experience.</p>
+                <div class="tag-row">
+                  <span class="tag">LOW XP</span>
+                  <span class="tag">BALANCED</span>
+                  <span class="tag">BEGINNER</span>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-icon">A</div>
+                <h3>Creative Mode</h3>
+                <p>Curated picks for art sessions, beat making, coding, design, and world-building.</p>
+                <div class="tag-row">
+                  <span class="tag">FOCUS</span>
+                  <span class="tag">CRAFT</span>
+                  <span class="tag">FLOW</span>
+                </div>
+              </article>
+
+              <article class="card">
+                <div class="card-icon">Z</div>
+                <h3>Sleep Save Point</h3>
+                <p>End-of-day selections for winding down after raids, work, and long side missions.</p>
+                <div class="tag-row">
+                  <span class="tag">REST</span>
+                  <span class="tag">NIGHT</span>
+                  <span class="tag">SAVE</span>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section id="lounge">
+            <div class="section-title">
+              <h2>Gamer Lounge</h2>
+              <p>A community-first experience with tournaments, retro consoles, education, and chill sessions.</p>
+            </div>
+
+            <div class="level-grid">
+              <div class="console-panel">
+                <h3>Membership Level</h3>
+                <p><strong>XP Progress:</strong> Earn points for visits, education sessions, responsible-use check-ins, and community events.</p>
+                <div class="progress" aria-label="Membership progress"><span></span></div>
+                <ul class="perk-list">
+                  <li>Monthly retro game nights and handheld meetups.</li>
+                  <li>First look at limited merch drops and sticker packs.</li>
+                  <li>Education cards for terpene profiles and responsible consumption.</li>
+                </ul>
+              </div>
+
+              <div class="shop-window">
+                <article class="product">
+                  <div>
+                    <strong>Pixel Flower</strong>
+                    <span>Sample category card for flower inventory.</span>
+                  </div>
+                  <div class="rating">★★★★☆</div>
+                </article>
+                <article class="product">
+                  <div>
+                    <strong>8-Bit Pre-Rolls</strong>
+                    <span>Quick pickup format for adult customers.</span>
+                  </div>
+                  <div class="rating">★★★★★</div>
+                </article>
+                <article class="product">
+                  <div>
+                    <strong>Boss Battle Edibles</strong>
+                    <span>Placeholder for compliant edible listings.</span>
+                  </div>
+                  <div class="rating">★★★☆☆</div>
+                </article>
+                <article class="product">
+                  <div>
+                    <strong>Save Point Merch</strong>
+                    <span>Hats, tees, stickers, and gamer accessories.</span>
+                  </div>
+                  <div class="rating">★★★★★</div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section id="events">
+            <div class="section-title">
+              <h2>Upcoming Levels</h2>
+              <p>Use this section to promote compliant in-store events, launch days, and community programming.</p>
+            </div>
+
+            <div class="event-list">
+              <article class="event">
+                <div class="event-date">FRI<br>7PM</div>
+                <div>
+                  <h3>Retro Fighter Friday</h3>
+                  <p>Casual fighting game bracket, prizes, music, and adult-only community networking.</p>
+                </div>
+              </article>
+
+              <article class="event">
+                <div class="event-date">SAT<br>3PM</div>
+                <div>
+                  <h3>Terpene Tutorial</h3>
+                  <p>Learn flavor, aroma, effects, storage tips, and how to shop with confidence.</p>
+                </div>
+              </article>
+
+              <article class="event">
+                <div class="event-date">SUN<br>5PM</div>
+                <div>
+                  <h3>Handheld Hangout</h3>
+                  <p>Bring your retro handheld, trade carts, meet gamers, and discover new local creators.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section id="visit">
+            <div class="section-title">
+              <h2>Visit The Shop</h2>
+              <p>Collect emails, event interest, and pickup questions. Connect this form to your backend later.</p>
+            </div>
+
+            <div class="visit">
+              <div class="console-panel">
+                <h3>Retro Canni HQ</h3>
+                <p><strong>Address:</strong> 420 Pixel Ave, Your City, ST</p>
+                <p><strong>Hours:</strong> Mon-Sat 11AM-9PM • Sun 12PM-6PM</p>
+                <p><strong>Reminder:</strong> Bring valid government ID. 21+ only. Follow local laws. Do not drive impaired.</p>
+                <div class="tag-row">
+                  <span class="tag">PICKUP</span>
+                  <span class="tag">EVENTS</span>
+                  <span class="tag">MERCH</span>
+                  <span class="tag">COMMUNITY</span>
+                </div>
+              </div>
+
+              <form class="console-panel form" id="contactForm">
+                <label class="field">
+                  Name
+                  <input type="text" name="name" placeholder="Player name" required />
+                </label>
+                <label class="field">
+                  Email
+                  <input type="email" name="email" placeholder="player@email.com" required />
+                </label>
+                <label class="field">
+                  Interest
+                  <select name="interest">
+                    <option>Event updates</option>
+                    <option>Menu drops</option>
+                    <option>Membership</option>
+                    <option>Merch</option>
+                  </select>
+                </label>
+                <label class="field">
+                  Message
+                  <textarea name="message" placeholder="Tell us what quest you are on..."></textarea>
+                </label>
+                <button class="btn primary" type="submit">Save Contact</button>
+              </form>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls" aria-hidden="true">
+      <div class="dpad"></div>
+      <div class="buttons">
+        <div class="round-btn">B</div>
+        <div class="round-btn">A</div>
+      </div>
+    </div>
+
+    <div class="speaker" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <footer>
+      © <span id="year"></span> Retro Canni. Adult-use cannabis website concept. Consume responsibly.
+    </footer>
+  </main>
+
+  <script>
+    const ageGate = document.getElementById('ageGate');
+    const enterSite = document.getElementById('enterSite');
+    const exitSite = document.getElementById('exitSite');
+    const toast = document.getElementById('toast');
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+    const contactForm = document.getElementById('contactForm');
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    if (localStorage.getItem('retroCanniAgeOK') === 'yes') {
+      ageGate.classList.add('hidden');
+    }
+
+    enterSite.addEventListener('click', () => {
+      localStorage.setItem('retroCanniAgeOK', 'yes');
+      ageGate.classList.add('hidden');
+      showToast('Welcome, Player 1.');
+    });
+
+    exitSite.addEventListener('click', () => {
+      showToast('Access denied. Please return when eligible.');
+      setTimeout(() => {
+        document.body.innerHTML = '<div style="min-height:100vh;display:grid;place-items:center;background:#111;color:#9bbc0f;font-family:Courier New,monospace;text-align:center;padding:24px;"><div><h1>POWERED DOWN</h1><p>This website is for adults 21+ only.</p></div></div>';
+      }, 1000);
+    });
+
+    menuBtn.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    contactForm.addEventListener('submit', event => {
+      event.preventDefault();
+      contactForm.reset();
+      showToast('Contact saved. Quest accepted.');
+    });
+  </script>
+</body>
+</html>
