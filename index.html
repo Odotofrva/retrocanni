@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Retro Canni | Game-Ready Dispensary</title>
-  <meta name="description" content="Retro Canni is a retro gaming-inspired dispensary experience for 21+ customers." />
+  <title>Retro Canni Dispensary</title>
+  <meta name="description" content="Retro Canni is a retro gaming-inspired dispensary experience built for the gaming community. 21+ only." />
   <style>
     :root {
       --shell: #d7d2bf;
@@ -39,8 +39,9 @@
       color: var(--white);
       font-family: var(--sans);
       background:
-        radial-gradient(circle at 20% 20%, rgba(155, 188, 15, .18), transparent 28%),
-        radial-gradient(circle at 80% 0%, rgba(184, 60, 75, .22), transparent 30%),
+        radial-gradient(circle at 15% 20%, rgba(155, 188, 15, .18), transparent 28%),
+        radial-gradient(circle at 82% 8%, rgba(184, 60, 75, .22), transparent 30%),
+        radial-gradient(circle at 50% 95%, rgba(51, 74, 143, .18), transparent 24%),
         linear-gradient(135deg, #10100f 0%, #151515 45%, #050505 100%);
       overflow-x: hidden;
     }
@@ -55,7 +56,25 @@
         linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
       background-size: 24px 24px;
-      z-index: -1;
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          0deg,
+          rgba(255,255,255,.018) 0px,
+          rgba(255,255,255,.018) 2px,
+          transparent 2px,
+          transparent 6px
+        );
+      mix-blend-mode: overlay;
+      z-index: 80;
+      opacity: .25;
     }
 
     a {
@@ -77,6 +96,7 @@
       background: rgba(246, 216, 107, .08);
       font-size: .82rem;
       text-align: center;
+      backdrop-filter: blur(8px);
     }
 
     .gameboy {
@@ -94,6 +114,19 @@
       color: var(--black);
       position: relative;
       isolation: isolate;
+    }
+
+    .gameboy::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 10px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.32);
+      filter: blur(2px);
+      opacity: .55;
     }
 
     .brand-strip {
@@ -182,6 +215,18 @@
       position: relative;
     }
 
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      pointer-events: none;
+      border-radius: inherit;
+      background: rgba(155,188,15,.08);
+      animation: screenFlicker 4s infinite steps(1);
+      z-index: 2;
+      mix-blend-mode: multiply;
+    }
+
     .screen::after {
       content: "";
       position: absolute;
@@ -189,13 +234,37 @@
       pointer-events: none;
       background: radial-gradient(circle at 28% 18%, rgba(255,255,255,.28), transparent 24%);
       mix-blend-mode: soft-light;
+      z-index: 3;
     }
 
     .screen-content {
       position: relative;
-      z-index: 1;
+      z-index: 4;
       padding: clamp(18px, 3vw, 32px);
     }
+
+    .floating-pixels {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .pixel {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border: 2px solid rgba(15,56,15,.32);
+      background: rgba(48,98,48,.08);
+      animation: floatPixel 9s linear infinite;
+    }
+
+    .pixel:nth-child(1) { left: 8%; top: 96%; animation-delay: 0s; }
+    .pixel:nth-child(2) { left: 28%; top: 110%; animation-delay: 1.4s; }
+    .pixel:nth-child(3) { left: 62%; top: 102%; animation-delay: 2.8s; }
+    .pixel:nth-child(4) { left: 84%; top: 115%; animation-delay: 4.2s; }
+    .pixel:nth-child(5) { left: 45%; top: 108%; animation-delay: 5.6s; }
 
     .nav {
       display: flex;
@@ -205,7 +274,7 @@
       font-family: var(--pixel);
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 7;
       padding-bottom: 18px;
     }
 
@@ -305,6 +374,15 @@
       text-shadow: 4px 4px 0 rgba(48,98,48,.22);
     }
 
+    .type-line {
+      min-height: 28px;
+      font-family: var(--pixel);
+      font-size: clamp(.86rem, 1.8vw, 1.05rem);
+      font-weight: 900;
+      margin: 0 0 16px;
+      text-transform: uppercase;
+    }
+
     .hero p {
       font-size: clamp(1rem, 2vw, 1.2rem);
       line-height: 1.55;
@@ -344,6 +422,12 @@
       box-shadow: 8px 8px 0 rgba(15,56,15,.28);
     }
 
+    .btn:active,
+    .round-btn:active {
+      transform: translate(1px, 1px) scale(.98);
+      box-shadow: 2px 2px 0 rgba(15,56,15,.28);
+    }
+
     .btn.primary {
       background: var(--ink);
       color: var(--screen);
@@ -356,6 +440,11 @@
       background: rgba(48,98,48,.13);
       box-shadow: 8px 8px 0 rgba(15,56,15,.23);
       transform: rotate(1.5deg);
+      transition: .25s ease;
+    }
+
+    .hero-card:hover {
+      transform: rotate(0deg) translateY(-4px);
     }
 
     .mini-game {
@@ -379,6 +468,7 @@
       top: 42%;
       transform: translate(-50%, -50%);
       image-rendering: pixelated;
+      animation: spriteBounce 1.2s infinite steps(2);
     }
 
     .sprite .leaf {
@@ -437,7 +527,21 @@
       border: 2px solid var(--ink);
       padding: 8px;
       background: rgba(155,188,15,.7);
+      animation: blinkBox 1.2s infinite steps(2);
     }
+
+    .coin {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      background: rgba(246,216,107,.42);
+      animation: coinSpin 1s infinite steps(2), coinFloat 4.2s infinite ease-in-out;
+    }
+
+    .coin.one { right: 58px; top: 62px; }
+    .coin.two { left: 46px; bottom: 54px; animation-delay: .5s; }
 
     section {
       padding: clamp(30px, 6vw, 62px) 0;
@@ -462,7 +566,7 @@
     }
 
     .section-title p {
-      max-width: 420px;
+      max-width: 470px;
       margin: 0;
       font-weight: 800;
       line-height: 1.45;
@@ -481,11 +585,27 @@
       box-shadow: 6px 6px 0 rgba(15,56,15,.22);
       padding: 16px;
       transition: .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: auto -40% -60% -40%;
+      height: 70%;
+      background: rgba(255,255,255,.07);
+      transform: rotate(-8deg);
+      transition: .25s ease;
     }
 
     .card:hover {
       transform: translate(-2px, -2px);
       box-shadow: 8px 8px 0 rgba(15,56,15,.22);
+    }
+
+    .card:hover::after {
+      transform: translateY(-28px) rotate(-8deg);
     }
 
     .card-icon {
@@ -500,6 +620,8 @@
       font-weight: 900;
       font-size: 1.4rem;
       background: rgba(139,172,15,.6);
+      position: relative;
+      z-index: 1;
     }
 
     h3 {
@@ -507,12 +629,16 @@
       font-family: var(--pixel);
       font-size: 1rem;
       text-transform: uppercase;
+      position: relative;
+      z-index: 1;
     }
 
     .card p {
       margin: 0 0 12px;
       line-height: 1.5;
       font-weight: 700;
+      position: relative;
+      z-index: 1;
     }
 
     .tag-row {
@@ -520,6 +646,8 @@
       flex-wrap: wrap;
       gap: 7px;
       margin-top: 10px;
+      position: relative;
+      z-index: 1;
     }
 
     .tag {
@@ -600,6 +728,12 @@
       border-radius: 14px;
       background: rgba(139,172,15,.35);
       padding: 12px;
+      transition: .2s ease;
+    }
+
+    .event:hover {
+      transform: translateX(4px);
+      background: rgba(139,172,15,.48);
     }
 
     .event-date {
@@ -631,7 +765,7 @@
     }
 
     .product {
-      min-height: 170px;
+      min-height: 180px;
       border: 3px solid var(--ink);
       border-radius: 12px;
       background:
@@ -641,6 +775,24 @@
       flex-direction: column;
       justify-content: space-between;
       box-shadow: 5px 5px 0 rgba(15,56,15,.2);
+      transition: .2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+    }
+
+    .product::before {
+      content: "ITEM";
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      font-family: var(--pixel);
+      font-size: .62rem;
+      font-weight: 900;
+      opacity: .45;
     }
 
     .product strong {
@@ -649,6 +801,7 @@
       font-size: .88rem;
       text-transform: uppercase;
       margin-bottom: 8px;
+      padding-right: 38px;
     }
 
     .product span {
@@ -661,6 +814,28 @@
       font-family: var(--pixel);
       font-weight: 900;
       margin-top: 10px;
+    }
+
+    .affiliate-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .affiliate-badge {
+      display: inline-grid;
+      place-items: center;
+      width: 88px;
+      height: 88px;
+      border: 4px solid var(--ink);
+      border-radius: 20px;
+      font-family: var(--pixel);
+      font-weight: 900;
+      font-size: 1.1rem;
+      background: rgba(139,172,15,.45);
+      box-shadow: 6px 6px 0 rgba(15,56,15,.22);
+      margin-bottom: 14px;
+      animation: badgeWobble 2.5s infinite steps(2);
     }
 
     .visit {
@@ -697,9 +872,63 @@
       box-shadow: 4px 4px 0 rgba(15,56,15,.18);
     }
 
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      background: rgba(155,188,15,.88);
+      transform: translate(-1px, -1px);
+    }
+
     .field textarea {
       min-height: 120px;
       resize: vertical;
+    }
+
+    .discount-bubble {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      width: min(270px, calc(100vw - 34px));
+      z-index: 85;
+      border: 3px solid var(--ink);
+      border-radius: 16px;
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(0deg, rgba(15,56,15,.07) 0px, rgba(15,56,15,.07) 2px, transparent 2px, transparent 5px),
+        var(--screen);
+      box-shadow: 8px 8px 0 rgba(0,0,0,.28), 0 0 22px rgba(155,188,15,.25);
+      padding: 14px;
+      font-family: var(--pixel);
+      animation: bubbleBounce 1.5s infinite steps(2);
+    }
+
+    .discount-bubble h3 {
+      font-size: .92rem;
+      margin-bottom: 6px;
+    }
+
+    .discount-bubble p {
+      margin: 0 0 10px;
+      font-size: .78rem;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .discount-close {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      width: 30px;
+      height: 30px;
+      border: 3px solid var(--ink);
+      border-radius: 999px;
+      background: var(--screen);
+      color: var(--ink);
+      font-family: var(--pixel);
+      font-weight: 900;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
     }
 
     .controls {
@@ -716,6 +945,7 @@
       position: relative;
       margin: auto;
       filter: drop-shadow(5px 5px 0 rgba(0,0,0,.18));
+      cursor: pointer;
     }
 
     .dpad::before,
@@ -765,6 +995,8 @@
       display: grid;
       place-items: center;
       transform: rotate(18deg);
+      cursor: pointer;
+      user-select: none;
     }
 
     .speaker {
@@ -867,6 +1099,14 @@
       transform: translateX(-50%) translateY(-8px);
     }
 
+    .shake-screen {
+      animation: gameShake .28s steps(2);
+    }
+
+    .flash-screen {
+      animation: gameFlash .45s steps(2);
+    }
+
     @keyframes pulse {
       0%, 100% { opacity: .55; }
       50% { opacity: 1; }
@@ -882,10 +1122,68 @@
       to { width: 88%; }
     }
 
+    @keyframes spriteBounce {
+      0%, 100% { transform: translate(-50%, -50%); }
+      50% { transform: translate(-50%, -56%); }
+    }
+
+    @keyframes blinkBox {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .58; }
+    }
+
+    @keyframes coinSpin {
+      0%, 100% { border-radius: 50%; width: 18px; }
+      50% { border-radius: 2px; width: 8px; }
+    }
+
+    @keyframes coinFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-14px); }
+    }
+
+    @keyframes screenFlicker {
+      0%, 95%, 100% { opacity: .05; }
+      96% { opacity: .2; }
+      97% { opacity: .03; }
+      98% { opacity: .16; }
+    }
+
+    @keyframes floatPixel {
+      from { transform: translateY(0) rotate(0deg); opacity: 0; }
+      15% { opacity: .75; }
+      85% { opacity: .75; }
+      to { transform: translateY(-900px) rotate(180deg); opacity: 0; }
+    }
+
+    @keyframes bubbleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes badgeWobble {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    @keyframes gameShake {
+      0% { transform: translate(0, 0); }
+      25% { transform: translate(-4px, 2px); }
+      50% { transform: translate(4px, -2px); }
+      75% { transform: translate(-2px, -2px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    @keyframes gameFlash {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.35); }
+    }
+
     @media (max-width: 900px) {
       .hero,
       .level-grid,
-      .visit {
+      .visit,
+      .affiliate-grid {
         grid-template-columns: 1fr;
       }
 
@@ -983,6 +1281,13 @@
       .top-alert {
         border-radius: 18px;
       }
+
+      .discount-bubble {
+        left: 14px;
+        right: 14px;
+        bottom: 14px;
+        width: auto;
+      }
     }
 
     @media (max-width: 420px) {
@@ -1014,18 +1319,25 @@
   <div class="age-gate" id="ageGate" role="dialog" aria-modal="true" aria-labelledby="ageTitle">
     <div class="age-card">
       <div class="eyebrow">INSERT ID TO START</div>
-      <h2 id="ageTitle">Are you 21+?</h2>
-      <p>Retro Canni is a cannabis-themed website experience for adults only. Please follow all local laws and consume responsibly.</p>
+      <h2 id="ageTitle">21+ Player Check</h2>
+      <p>Retro Canni is an adult-use cannabis brand experience. Please confirm you are 21 or older and follow your local laws.</p>
       <div class="age-actions">
-        <button class="btn primary" id="enterSite">Yes, Start Game</button>
-        <button class="btn" id="exitSite">No, Power Down</button>
+        <button class="btn primary" id="enterSite">Press Start</button>
+        <button class="btn" id="exitSite">Power Down</button>
       </div>
     </div>
   </div>
 
-  <div class="toast" id="toast">Game saved.</div>
+  <div class="toast" id="toast">Achievement unlocked.</div>
 
-  <div class="top-alert">21+ only. This demo does not process cannabis sales. Update products, pickup rules, and legal language for your licensed market.</div>
+  <aside class="discount-bubble" id="discountBubble" aria-label="First purchase discount">
+    <button class="discount-close" id="discountClose" aria-label="Close discount popup">×</button>
+    <h3>FIRST QUEST BONUS</h3>
+    <p>New players get 10% off their first eligible purchase. Use code: START10</p>
+    <a href="#visit" class="btn primary" id="claimDiscount">Claim Bonus</a>
+  </aside>
+
+  <div class="top-alert">21+ only. Retro Canni is built for responsible adults, gaming culture, community nights, accessories, and compliant cannabis education.</div>
 
   <main class="gameboy">
     <div class="brand-strip">
@@ -1042,7 +1354,15 @@
         <span>RC-420</span>
       </div>
 
-      <div class="screen">
+      <div class="screen" id="screen">
+        <div class="floating-pixels" aria-hidden="true">
+          <span class="pixel"></span>
+          <span class="pixel"></span>
+          <span class="pixel"></span>
+          <span class="pixel"></span>
+          <span class="pixel"></span>
+        </div>
+
         <div class="screen-content">
           <nav class="nav" aria-label="Primary navigation">
             <a href="#home" class="logo" aria-label="Retro Canni Home">
@@ -1051,8 +1371,9 @@
             </a>
             <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
             <div class="nav-links" id="navLinks">
-              <a href="#strains">Strains</a>
-              <a href="#lounge">Lounge</a>
+              <a href="#menu">Menu</a>
+              <a href="#lighters">Lighters</a>
+              <a href="#affiliate">Affiliate</a>
               <a href="#events">Events</a>
               <a href="#visit">Visit</a>
             </div>
@@ -1061,19 +1382,22 @@
           <header class="hero" id="home">
             <div>
               <div class="eyebrow">PLAYER 1 READY • 21+</div>
-              <h1>Press Start & Chill</h1>
-              <p>Retro Canni is a licensed dispensary concept built for gamers, creators, streamers, collectors, and late-night side-questers who love nostalgic pixels and modern cannabis culture.</p>
+              <h1>Press Start To Elevate</h1>
+              <div class="type-line" id="typeLine">Loading Retro Canni...</div>
+              <p>Retro Canni is where dispensary culture meets cartridge-era gaming. We serve grown gamers, creators, collectors, streamers, and chill-mode players who want a nostalgic experience with modern, responsible cannabis education.</p>
               <div class="hero-actions">
-                <a class="btn primary" href="#strains">View Menu</a>
-                <a class="btn" href="#events">Join Game Night</a>
+                <a class="btn primary game-btn" href="#menu">Load Menu</a>
+                <a class="btn game-btn" href="#affiliate">Join Affiliate Guild</a>
               </div>
             </div>
 
             <div class="hero-card" aria-label="Animated pixel cannabis game screen">
               <div class="mini-game">
-                <div class="score-box">SCORE 0420<br>LEVEL: RELAX</div>
+                <div class="score-box">SCORE 0420<br>LEVEL: CHILL</div>
                 <div class="pixel-cloud one"></div>
                 <div class="pixel-cloud two"></div>
+                <span class="coin one"></span>
+                <span class="coin two"></span>
                 <div class="sprite" aria-hidden="true">
                   <span class="leaf"></span>
                   <span class="leaf"></span>
@@ -1082,97 +1406,135 @@
                   <span class="leaf"></span>
                   <span class="stem"></span>
                 </div>
-                <div class="status-box">A: MENU<br>B: EVENTS</div>
+                <div class="status-box">A: SHOP<br>B: EVENTS</div>
               </div>
             </div>
           </header>
 
-          <section id="strains">
+          <section id="menu">
             <div class="section-title">
-              <h2>Choose Your Power-Up</h2>
-              <p>Organize your cannabis menu like a cartridge library. Swap the sample names with your real licensed inventory.</p>
+              <h2>Game Menu</h2>
+              <p>Shop by mood, mission, and play style. Replace the sample products with your real compliant dispensary inventory.</p>
             </div>
 
             <div class="cards">
-              <article class="card">
-                <div class="card-icon">S</div>
-                <h3>Starter Quest</h3>
-                <p>Balanced options for casual players who want a smooth, easygoing experience.</p>
+              <article class="card game-card">
+                <div class="card-icon">1UP</div>
+                <h3>Starter Pack</h3>
+                <p>Approachable picks for new adult consumers who want something smooth, clear, and easy to understand.</p>
                 <div class="tag-row">
-                  <span class="tag">LOW XP</span>
-                  <span class="tag">BALANCED</span>
                   <span class="tag">BEGINNER</span>
+                  <span class="tag">BALANCED</span>
+                  <span class="tag">LOW XP</span>
                 </div>
               </article>
 
-              <article class="card">
-                <div class="card-icon">A</div>
+              <article class="card game-card">
+                <div class="card-icon">⚡</div>
                 <h3>Creative Mode</h3>
-                <p>Curated picks for art sessions, beat making, coding, design, and world-building.</p>
+                <p>Curated selections for beat making, sketching, coding, designing, world-building, and late-night ideas.</p>
                 <div class="tag-row">
-                  <span class="tag">FOCUS</span>
-                  <span class="tag">CRAFT</span>
                   <span class="tag">FLOW</span>
+                  <span class="tag">CREATE</span>
+                  <span class="tag">FOCUS</span>
                 </div>
               </article>
 
-              <article class="card">
-                <div class="card-icon">Z</div>
-                <h3>Sleep Save Point</h3>
-                <p>End-of-day selections for winding down after raids, work, and long side missions.</p>
+              <article class="card game-card">
+                <div class="card-icon">Zz</div>
+                <h3>Save Point</h3>
+                <p>Wind-down options for after the shift, after the stream, or after beating the boss level called life.</p>
                 <div class="tag-row">
                   <span class="tag">REST</span>
                   <span class="tag">NIGHT</span>
-                  <span class="tag">SAVE</span>
+                  <span class="tag">RESET</span>
                 </div>
+              </article>
+            </div>
+          </section>
+
+          <section id="lighters">
+            <div class="section-title">
+              <h2>Retro Canni Lighters</h2>
+              <p>Our signature accessory line brings collectible handheld energy to everyday essentials.</p>
+            </div>
+
+            <div class="shop-window">
+              <article class="product game-card">
+                <div>
+                  <strong>RC Classic Lighter</strong>
+                  <span>Game Boy-inspired lighter with Retro Canni badge, pixel grid finish, and pocket-ready feel.</span>
+                </div>
+                <div class="rating">COMMON ★★★★☆</div>
+              </article>
+              <article class="product game-card">
+                <div>
+                  <strong>RC Flame Cartridge</strong>
+                  <span>Collector-style shell design made to feel like pulling a classic cart from your stash box.</span>
+                </div>
+                <div class="rating">RARE ★★★★★</div>
+              </article>
+              <article class="product game-card">
+                <div>
+                  <strong>RC Boss Battle</strong>
+                  <span>Limited drop lighter with darker shell, red button detail, and high-score packaging.</span>
+                </div>
+                <div class="rating">LIMITED ★★★★★</div>
+              </article>
+              <article class="product game-card">
+                <div>
+                  <strong>RC Duo Pack</strong>
+                  <span>Two-lighter bundle for players who keep one at home and one in the travel pouch.</span>
+                </div>
+                <div class="rating">BUNDLE ★★★★☆</div>
               </article>
             </div>
           </section>
 
           <section id="lounge">
             <div class="section-title">
-              <h2>Gamer Lounge</h2>
-              <p>A community-first experience with tournaments, retro consoles, education, and chill sessions.</p>
+              <h2>Player Lounge</h2>
+              <p>Not just a shop. Retro Canni is a side quest hub for grown gamers, creators, and culture builders.</p>
             </div>
 
             <div class="level-grid">
               <div class="console-panel">
-                <h3>Membership Level</h3>
-                <p><strong>XP Progress:</strong> Earn points for visits, education sessions, responsible-use check-ins, and community events.</p>
+                <h3>Membership XP</h3>
+                <p><strong>Level up with the community:</strong> Earn XP from event signups, education sessions, merch drops, and responsible-use check-ins.</p>
                 <div class="progress" aria-label="Membership progress"><span></span></div>
                 <ul class="perk-list">
-                  <li>Monthly retro game nights and handheld meetups.</li>
-                  <li>First look at limited merch drops and sticker packs.</li>
-                  <li>Education cards for terpene profiles and responsible consumption.</li>
+                  <li>Access retro game nights, handheld meetups, and local creator sessions.</li>
+                  <li>Unlock early merch alerts, lighter drops, and members-only sticker packs.</li>
+                  <li>Collect terpene cards and learn how to shop by mood, aroma, and experience.</li>
                 </ul>
               </div>
 
               <div class="shop-window">
-                <article class="product">
+                <article class="product game-card">
                   <div>
                     <strong>Pixel Flower</strong>
-                    <span>Sample category card for flower inventory.</span>
+                    <span>Sample category card for flower inventory and rotating drops.</span>
                   </div>
                   <div class="rating">★★★★☆</div>
                 </article>
-                <article class="product">
+                <article class="product game-card">
                   <div>
                     <strong>8-Bit Pre-Rolls</strong>
-                    <span>Quick pickup format for adult customers.</span>
+                    <span>Quick pickup format for adult customers on the move.</span>
                   </div>
                   <div class="rating">★★★★★</div>
                 </article>
-                <article class="product">
+                <article class="product game-card">
                   <div>
                     <strong>Boss Battle Edibles</strong>
-                    <span>Placeholder for compliant edible listings.</span>
+                    <span>Placeholder card for compliant edible listings and dosage education.</span>
                   </div>
                   <div class="rating">★★★☆☆</div>
                 </article>
-                <article class="product">
+                <article class="product game-card">
                   <div>
                     <strong>Save Point Merch</strong>
-                    <span>Hats, tees, stickers, and gamer accessories.</span>
+                    <span>Tees, hats, stickers, lighters, rolling trays, and gamer accessories.</span>
                   </div>
                   <div class="rating">★★★★★</div>
                 </article>
@@ -1180,34 +1542,88 @@
             </div>
           </section>
 
+          <section id="affiliate">
+            <div class="section-title">
+              <h2>Affiliate Guild</h2>
+              <p>Built for streamers, local creators, content pages, event hosts, and gaming communities.</p>
+            </div>
+
+            <div class="affiliate-grid">
+              <div class="console-panel">
+                <div class="affiliate-badge">GUILD</div>
+                <h3>Retro Canni Affiliate Program</h3>
+                <p>Join the guild and earn rewards for promoting Retro Canni merch, accessories, compliant events, and adult-only brand campaigns.</p>
+                <ul class="perk-list">
+                  <li>Get a unique affiliate code for merch, lighter drops, and community event signups.</li>
+                  <li>Receive content kits with pixel graphics, launch posts, flyers, and campaign copy.</li>
+                  <li>Earn bonus XP for verified creator campaigns, event collabs, and responsible-use education.</li>
+                </ul>
+                <div class="tag-row">
+                  <span class="tag">CREATORS</span>
+                  <span class="tag">STREAMERS</span>
+                  <span class="tag">EVENT HOSTS</span>
+                  <span class="tag">21+ ONLY</span>
+                </div>
+              </div>
+
+              <form class="console-panel form" id="affiliateForm">
+                <h3>Apply To The Guild</h3>
+                <label class="field">
+                  Creator Name
+                  <input type="text" name="creator" placeholder="@yourhandle" required />
+                </label>
+                <label class="field">
+                  Email
+                  <input type="email" name="email" placeholder="creator@email.com" required />
+                </label>
+                <label class="field">
+                  Platform
+                  <select name="platform">
+                    <option>Twitch / Streaming</option>
+                    <option>YouTube</option>
+                    <option>Instagram</option>
+                    <option>TikTok</option>
+                    <option>Local Events</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+                <label class="field">
+                  Why Retro Canni?
+                  <textarea name="pitch" placeholder="Tell us your community, audience, and collab idea..."></textarea>
+                </label>
+                <button class="btn primary game-btn" type="submit">Submit Guild App</button>
+              </form>
+            </div>
+          </section>
+
           <section id="events">
             <div class="section-title">
               <h2>Upcoming Levels</h2>
-              <p>Use this section to promote compliant in-store events, launch days, and community programming.</p>
+              <p>Promote compliant community events, game nights, education sessions, and launch drops.</p>
             </div>
 
             <div class="event-list">
-              <article class="event">
+              <article class="event game-card">
                 <div class="event-date">FRI<br>7PM</div>
                 <div>
                   <h3>Retro Fighter Friday</h3>
-                  <p>Casual fighting game bracket, prizes, music, and adult-only community networking.</p>
+                  <p>Casual fighting game bracket, creator pop-ups, merch table, and adult-only community networking.</p>
                 </div>
               </article>
 
-              <article class="event">
+              <article class="event game-card">
                 <div class="event-date">SAT<br>3PM</div>
                 <div>
                   <h3>Terpene Tutorial</h3>
-                  <p>Learn flavor, aroma, effects, storage tips, and how to shop with confidence.</p>
+                  <p>Learn aroma, flavor, storage, responsible consumption, and how to shop with confidence.</p>
                 </div>
               </article>
 
-              <article class="event">
+              <article class="event game-card">
                 <div class="event-date">SUN<br>5PM</div>
                 <div>
                   <h3>Handheld Hangout</h3>
-                  <p>Bring your retro handheld, trade carts, meet gamers, and discover new local creators.</p>
+                  <p>Bring your retro handheld, trade game stories, meet local gamers, and connect with creators.</p>
                 </div>
               </article>
             </div>
@@ -1216,7 +1632,7 @@
           <section id="visit">
             <div class="section-title">
               <h2>Visit The Shop</h2>
-              <p>Collect emails, event interest, and pickup questions. Connect this form to your backend later.</p>
+              <p>Collect first-purchase interest, event signups, lighter orders, and affiliate questions.</p>
             </div>
 
             <div class="visit">
@@ -1224,12 +1640,13 @@
                 <h3>Retro Canni HQ</h3>
                 <p><strong>Address:</strong> 420 Pixel Ave, Your City, ST</p>
                 <p><strong>Hours:</strong> Mon-Sat 11AM-9PM • Sun 12PM-6PM</p>
+                <p><strong>First Purchase:</strong> Use code <strong>START10</strong> for 10% off eligible purchases.</p>
                 <p><strong>Reminder:</strong> Bring valid government ID. 21+ only. Follow local laws. Do not drive impaired.</p>
                 <div class="tag-row">
                   <span class="tag">PICKUP</span>
                   <span class="tag">EVENTS</span>
-                  <span class="tag">MERCH</span>
-                  <span class="tag">COMMUNITY</span>
+                  <span class="tag">LIGHTERS</span>
+                  <span class="tag">AFFILIATE</span>
                 </div>
               </div>
 
@@ -1245,17 +1662,19 @@
                 <label class="field">
                   Interest
                   <select name="interest">
+                    <option>First purchase discount</option>
+                    <option>Retro Canni Lighters</option>
                     <option>Event updates</option>
                     <option>Menu drops</option>
-                    <option>Membership</option>
-                    <option>Merch</option>
+                    <option>Affiliate program</option>
+                    <option>Membership XP</option>
                   </select>
                 </label>
                 <label class="field">
                   Message
                   <textarea name="message" placeholder="Tell us what quest you are on..."></textarea>
                 </label>
-                <button class="btn primary" type="submit">Save Contact</button>
+                <button class="btn primary game-btn" type="submit">Save Contact</button>
               </form>
             </div>
           </section>
@@ -1264,10 +1683,10 @@
     </div>
 
     <div class="controls" aria-hidden="true">
-      <div class="dpad"></div>
+      <div class="dpad" id="dpad"></div>
       <div class="buttons">
-        <div class="round-btn">B</div>
-        <div class="round-btn">A</div>
+        <div class="round-btn" id="btnB">B</div>
+        <div class="round-btn" id="btnA">A</div>
       </div>
     </div>
 
@@ -1276,7 +1695,7 @@
     </div>
 
     <footer>
-      © <span id="year"></span> Retro Canni. Adult-use cannabis website concept. Consume responsibly.
+      © <span id="year"></span> Retro Canni. Adult-use cannabis website concept. Consume responsibly. Affiliate terms subject to local laws and campaign approval.
     </footer>
   </main>
 
@@ -1288,13 +1707,64 @@
     const menuBtn = document.getElementById('menuBtn');
     const navLinks = document.getElementById('navLinks');
     const contactForm = document.getElementById('contactForm');
+    const affiliateForm = document.getElementById('affiliateForm');
+    const discountBubble = document.getElementById('discountBubble');
+    const discountClose = document.getElementById('discountClose');
+    const claimDiscount = document.getElementById('claimDiscount');
+    const screen = document.getElementById('screen');
+    const typeLine = document.getElementById('typeLine');
+    const btnA = document.getElementById('btnA');
+    const btnB = document.getElementById('btnB');
+    const dpad = document.getElementById('dpad');
 
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const lines = [
+      'Loading Retro Canni...',
+      'Insert cart. Check ID. Choose your quest.',
+      'Built for grown gamers, creators, and chill-mode players.',
+      'First quest bonus unlocked: START10.'
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+
+    function typeWriter() {
+      const text = lines[lineIndex];
+      typeLine.textContent = text.slice(0, charIndex) + (charIndex % 2 === 0 ? '█' : '');
+      charIndex++;
+
+      if (charIndex <= text.length) {
+        setTimeout(typeWriter, 55);
+      } else {
+        setTimeout(() => {
+          charIndex = 0;
+          lineIndex = (lineIndex + 1) % lines.length;
+          typeWriter();
+        }, 1700);
+      }
+    }
+
+    typeWriter();
 
     function showToast(message) {
       toast.textContent = message;
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    function flashScreen(message) {
+      screen.classList.remove('flash-screen', 'shake-screen');
+      void screen.offsetWidth;
+      screen.classList.add('flash-screen');
+      if (message) showToast(message);
+    }
+
+    function shakeScreen(message) {
+      screen.classList.remove('flash-screen', 'shake-screen');
+      void screen.offsetWidth;
+      screen.classList.add('shake-screen');
+      if (message) showToast(message);
     }
 
     if (localStorage.getItem('retroCanniAgeOK') === 'yes') {
@@ -1304,7 +1774,7 @@
     enterSite.addEventListener('click', () => {
       localStorage.setItem('retroCanniAgeOK', 'yes');
       ageGate.classList.add('hidden');
-      showToast('Welcome, Player 1.');
+      flashScreen('Welcome, Player 1.');
     });
 
     exitSite.addEventListener('click', () => {
@@ -1317,19 +1787,59 @@
     menuBtn.addEventListener('click', () => {
       const isOpen = navLinks.classList.toggle('open');
       menuBtn.setAttribute('aria-expanded', String(isOpen));
+      shakeScreen(isOpen ? 'Menu opened.' : 'Menu closed.');
     });
 
     navLinks.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
         navLinks.classList.remove('open');
         menuBtn.setAttribute('aria-expanded', 'false');
+        flashScreen('Level loading...');
       });
+    });
+
+    document.querySelectorAll('.game-card').forEach(card => {
+      card.addEventListener('mouseenter', () => showToast('Item highlighted.'));
+    });
+
+    document.querySelectorAll('.game-btn').forEach(button => {
+      button.addEventListener('click', () => flashScreen('Button pressed.'));
     });
 
     contactForm.addEventListener('submit', event => {
       event.preventDefault();
       contactForm.reset();
-      showToast('Contact saved. Quest accepted.');
+      flashScreen('Contact saved. Quest accepted.');
+    });
+
+    affiliateForm.addEventListener('submit', event => {
+      event.preventDefault();
+      affiliateForm.reset();
+      flashScreen('Guild application saved.');
+    });
+
+    discountClose.addEventListener('click', () => {
+      discountBubble.classList.add('hidden');
+      showToast('Bonus bubble closed.');
+    });
+
+    claimDiscount.addEventListener('click', () => {
+      flashScreen('START10 bonus copied in spirit.');
+    });
+
+    btnA.addEventListener('click', () => flashScreen('A button: Shop mode.'));
+    btnB.addEventListener('click', () => shakeScreen('B button: Backstep.'));
+    dpad.addEventListener('click', () => shakeScreen('D-Pad movement.'));
+
+    let konami = [];
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+
+    window.addEventListener('keydown', event => {
+      konami.push(event.key);
+      konami = konami.slice(-code.length);
+      if (konami.join(',').toLowerCase() === code.join(',').toLowerCase()) {
+        flashScreen('Secret cartridge unlocked: Retro Canni XP +420.');
+      }
     });
   </script>
 </body>
